@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import MainStack from './src/sracks/MainStack';
 import UserContextProvider from './src/contexts/UserContext';
 
-// tempo da aula 1:00:30
+// tempo da aula 01:25:00
 export default function App() {
   return (
     <UserContextProvider>
