@@ -28,9 +28,9 @@ export function CustumButton({children}) {
 export function CustumButtonText({children}) {
   return <Text style={styles.custumButtonText}>{children}</Text>;
 }
-export function SignMessageButton({children}) {
+export function SignMessageButton({children, onPress}) {
   return (
-    <TouchableOpacity style={styles.signMessageButton}>
+    <TouchableOpacity style={styles.signMessageButton} onPress={onPress}>
       {children}
     </TouchableOpacity>
   );
@@ -42,11 +42,24 @@ export function SignMessageButtonTextBold({children}) {
   return <Text style={styles.signMessageButtonTextBold}>{children}</Text>;
 }
 
-export function SignInput({children, IconSvg, placeholder}) {
+export function SignInput({
+  children,
+  IconSvg,
+  placeholder,
+  value,
+  onChangeText,
+  password,
+}) {
   return (
     <View style={styles.signInput}>
       <IconSvg width={24} fill="#268596"></IconSvg>
-      <TextInput style={styles.textInput} placeholder={placeholder}></TextInput>
+      <TextInput
+        style={styles.textInput}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={password}
+      />
       {children}
     </View>
   );
