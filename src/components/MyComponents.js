@@ -20,9 +20,11 @@ export function Container({children}) {
 export function ImputArea({children}) {
   return <View style={styles.inputArea}>{children}</View>;
 }
-export function CustumButton({children}) {
+export function CustumButton({children, onPress}) {
   return (
-    <TouchableOpacity style={styles.custumButton}>{children}</TouchableOpacity>
+    <TouchableOpacity style={styles.custumButton} onPress={onPress}>
+      {children}
+    </TouchableOpacity>
   );
 }
 export function CustumButtonText({children}) {

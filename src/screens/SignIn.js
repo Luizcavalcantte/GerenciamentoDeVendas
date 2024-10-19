@@ -11,14 +11,30 @@ import {
   SignMessageButtonTextBold,
   SignInput,
 } from '../components/MyComponents';
+
+import Api from '../Api';
 import EmailIcon from '../assets/email.svg';
 import LockIcon from '../assets/lock.svg';
+
 export default function SignIn() {
   const navigation = useNavigation();
   const [emailField, setEmailfield] = useState('');
   const [passwordField, setPasswordfield] = useState('');
 
-  function handleSignClick() {}
+  async function handleSignClick() {
+    console.log('teste');
+    if (emailField != '' && passwordField != '') {
+      let json = await Api.signIn(emailField, passwordField);
+      console.log(json);
+      if (json.token) {
+        alert('Deu certo!');
+      } else {
+        alert('E-mail e/ou senha errados!');
+      }
+    } else {
+      alert('preencha os campos');
+    }
+  }
 
   function handleMessageButtonClick() {
     console.log('tela de cadastro');
