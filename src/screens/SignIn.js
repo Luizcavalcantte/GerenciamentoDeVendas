@@ -12,7 +12,7 @@ import {
   SignInput,
 } from '../components/MyComponents';
 
-import Api from '../Api';
+import {signIn} from '../Api';
 import EmailIcon from '../assets/email.svg';
 import LockIcon from '../assets/lock.svg';
 
@@ -21,16 +21,12 @@ export default function SignIn() {
   const [emailField, setEmailfield] = useState('');
   const [passwordField, setPasswordfield] = useState('');
 
-  async function handleSignClick() {
-    console.log('teste');
+  function handleSignClick() {
+    console.log('signIn click');
+
     if (emailField != '' && passwordField != '') {
-      let json = await Api.signIn(emailField, passwordField);
-      console.log(json);
-      if (json.token) {
-        alert('Deu certo!');
-      } else {
-        alert('E-mail e/ou senha errados!');
-      }
+      console.log('teste');
+      signIn(navigation, emailField, passwordField);
     } else {
       alert('preencha os campos');
     }
