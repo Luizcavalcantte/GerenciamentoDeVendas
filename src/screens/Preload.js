@@ -3,13 +3,13 @@ import {Container} from '../components/MyComponents';
 import {ActivityIndicator} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
-import {checkToken} from '../Api';
+import {checkAuthState} from '../Api';
 
 export default function Preload() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    checkToken(navigation);
+    checkAuthState(navigation);
   }, [navigation]);
 
   return (

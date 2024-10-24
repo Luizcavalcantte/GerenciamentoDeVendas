@@ -1,11 +1,12 @@
 import {initializeApp} from 'firebase/app';
 import {
+  getAuth,
   initializeAuth,
   getReactNativePersistence,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  onAuthStateChanged,
+  signInWithCustomToken,
 } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -24,19 +25,31 @@ const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
-auth.setPersistence(getReactNativePersistence(AsyncStorage));
+export async function checkToken(navigation) {
+  const token = await AsyncStorage.getItem('token');
+  if (token) {
+    try {
+      const userCredential = await signInWithCustomToken(auth, token);
+      const user = userCredential.user;
 
-export async function checkAuthState(navigation) {
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      console.log('Usuário logado:', user.displayName);
+      console.log('User ID:', user.uid);
+      console.log('Email:', user.email);
+      console.log('Display Name:', user.displayName);
+
+      alert('Login realizado com sucesso!');
+
       navigation.reset({
         routes: [{name: 'MainTab'}],
       });
-    } else {
+    } catch (error) {
       navigation.navigate('SignIn');
+      // alert('Erro ao fazer login: ' + error.message);
+      console.log('Erro ao fazer login: ' + error.message);
     }
-  });
+    console.log('token encontrado:' + token);
+  } else {
+    navigation.navigate('SignIn');
+  }
 }
 
 export async function signUp(navigation, name, emailField, passwordField) {
@@ -51,6 +64,9 @@ export async function signUp(navigation, name, emailField, passwordField) {
     await updateProfile(user, {
       displayName: name,
     });
+    const idToken = await user.getIdToken();
+    console.log('ID Token:', idToken);
+    await AsyncStorage.setItem('token', idToken);
 
     alert('Usuário cadastrado com sucesso!');
     navigation.reset({
@@ -70,7 +86,8 @@ export async function signIn(navigation, emailField, passwordField) {
       passwordField,
     );
     const user = userCredential.user;
-
+    const idToken = await user.getIdToken();
+    await AsyncStorage.setItem('token', idToken);
     alert('Login realizado com sucesso!');
     navigation.reset({
       routes: [{name: 'MainTab'}],
