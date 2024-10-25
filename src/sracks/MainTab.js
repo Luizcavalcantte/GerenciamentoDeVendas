@@ -1,5 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {TabArea} from '../components/TabComponents';
 
 import Home from '../screens/Home';
 import Search from '../screens/Search';
@@ -11,7 +12,7 @@ const Tab = createBottomTabNavigator();
 
 export default function MainTab() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBar={props => <TabArea {...props} />}>
       <Tab.Screen name="Home" component={Home}></Tab.Screen>
       <Tab.Screen name="Search" component={Search}></Tab.Screen>
       <Tab.Screen name="Appointments" component={Appointments}></Tab.Screen>
