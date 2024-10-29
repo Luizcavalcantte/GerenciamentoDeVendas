@@ -1,4 +1,6 @@
 import {initializeApp} from 'firebase/app';
+import {getFirestore, collection, doc, getDoc} from 'firebase/firestore';
+
 import {
   initializeAuth,
   getReactNativePersistence,
@@ -20,6 +22,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
@@ -77,5 +82,21 @@ export async function signIn(navigation, emailField, passwordField) {
     });
   } catch (error) {
     alert(error.message);
+  }
+}
+
+export async function getBarbers() {
+  console.log('Iniciada função getBarbers');
+  const docRef = doc(db, 'data', 'fRKGk5zCawMTccefdDon');
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    const barbers = data.barbers;
+    console.log('Barbeiros:', barbers);
+    return barbers;
+  } else {
+    console.log('Nenhum documento encontrado!');
+    return [];
   }
 }

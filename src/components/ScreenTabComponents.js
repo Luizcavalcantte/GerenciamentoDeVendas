@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 
 export function Container({children}) {
@@ -49,6 +50,12 @@ export function LocationFinder({children, onPress}) {
     <TouchableOpacity style={styles.locationFinder} onPress={onPress}>
       {children}
     </TouchableOpacity>
+  );
+}
+
+export function LoadingIcon() {
+  return (
+    <ActivityIndicator size="large" color="#fff" style={{marginTop: 50}} />
   );
 }
 

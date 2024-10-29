@@ -5,7 +5,8 @@ import MyLocationIcon from '../assets/my_location.svg';
 import {useNavigation} from '@react-navigation/native';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
-import {Platform} from 'react-native';
+import {ActivityIndicator, Platform} from 'react-native';
+import {getBarbers} from '../Api';
 
 import {
   Container,
@@ -16,6 +17,7 @@ import {
   LocationArea,
   LocationInput,
   LocationFinder,
+  LoadingIcon,
 } from '../components/ScreenTabComponents';
 
 export default function Home() {
@@ -23,6 +25,8 @@ export default function Home() {
 
   const [locationText, setLocationText] = useState();
   const [coords, setCoords] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [list, setList] = useState([]);
 
   async function handleLocationFinder() {
     setCoords(null);
@@ -32,11 +36,16 @@ export default function Home() {
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
     );
     if (result == 'granted') {
+      setLoading(true);
+      setLocationText('');
+      setList([]);
       Geolocation.getCurrentPosition(info => {
         setCoords(info.coords);
+        getBarbers();
       });
     }
   }
+
   return (
     <Container>
       <Scroller>
@@ -59,6 +68,7 @@ export default function Home() {
             <MyLocationIcon width="24" height="24" fill="#fff"></MyLocationIcon>
           </LocationFinder>
         </LocationArea>
+        {loading && <LoadingIcon />}
       </Scroller>
     </Container>
   );
