@@ -92,7 +92,7 @@ export default function Home() {
         </LocationArea>
         <ListArea>
           {list.map((item, key) => (
-            <BarberItem key={key} data={item} />
+            <BarberItem key={key} data={item} navigation={navigation} />
           ))}
         </ListArea>
         {loading && <LoadingIcon />}

@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   onAuthStateChanged,
+  signOut,
 } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -86,7 +87,6 @@ export async function signIn(navigation, emailField, passwordField) {
 }
 
 export async function getBarbers() {
-  console.log('Iniciada função getBarbers');
   const docRef = doc(db, 'data', 'fRKGk5zCawMTccefdDon');
   const docSnap = await getDoc(docRef);
 
@@ -98,5 +98,37 @@ export async function getBarbers() {
   } else {
     console.log('Nenhum documento encontrado!');
     return [];
+  }
+}
+
+export async function logOut(navigation) {
+  try {
+    await signOut(auth);
+    console.log('Usuário deslogado com sucesso');
+    navigation.reset({
+      routes: [{name: 'SignIn'}],
+    });
+  } catch (error) {
+    console.error('Erro ao deslogar: ', error);
+  }
+}
+
+export async function getBarber(id) {
+  console.log('Iniciada função getBarber');
+  const docRef = doc(db, 'data', 'fRKGk5zCawMTccefdDon'); // Acesse o documento específico
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    const barbers = data.barbers;
+    const barber = barbers.find(barber => barber.id === id); // Encontre o barbeiro com o ID específico
+    if (barber) {
+      return barber;
+    } else {
+      console.log('Barbeiro não encontrado!');
+      return null;
+    }
+  } else {
+    console.log('Nenhum documento encontrado!');
+    return null;
   }
 }

@@ -75,9 +75,17 @@ export function LoadingIcon() {
 export function ListArea({children}) {
   return <View style={styles.listArea}>{children}</View>;
 }
-export function BarberItem({data}) {
+export function BarberItem({data, state, navigation}) {
+  function handleClick() {
+    navigation.navigate('Barber', {
+      id: data.id,
+      avatar: data.avatar,
+      name: data.name,
+      stars: data.stars,
+    });
+  }
   return (
-    <TouchableOpacity style={styles.barberItem}>
+    <TouchableOpacity style={styles.barberItem} onPress={handleClick}>
       <View style={styles.area}>
         <Image style={styles.avatar} source={{uri: data.avatar}} />
         <View style={styles.infoArea}>
