@@ -93,7 +93,7 @@ export async function getBarbers() {
   if (docSnap.exists()) {
     const data = docSnap.data();
     const barbers = data.barbers;
-    console.log('Barbeiros:', barbers);
+
     return barbers;
   } else {
     console.log('Nenhum documento encontrado!');

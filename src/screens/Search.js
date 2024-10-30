@@ -1,10 +1,15 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import React, {useState} from 'react';
+import {Text, View, ScrollView, RefreshControl} from 'react-native';
 
 export default function Search() {
+  function onRefresh() {}
+  const [refreshing, setRefresing] = useState(false);
   return (
-    <View>
-      <Text>Search</Text>
-    </View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}></RefreshControl>
+      }></ScrollView>
   );
 }

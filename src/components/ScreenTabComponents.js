@@ -8,13 +8,26 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
+  Image,
+  RefreshControl,
 } from 'react-native';
+import {Stars} from './Stars';
 
 export function Container({children}) {
   return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
 }
-export function Scroller({children}) {
-  return <ScrollView style={styles.scroller}>{children}</ScrollView>;
+export function Scroller({children, refreshing, onRefresh}) {
+  return (
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}></RefreshControl>
+      }
+      style={styles.scroller}>
+      {children}
+    </ScrollView>
+  );
 }
 export function HeaderArea({children}) {
   return <View style={styles.headerArea}>{children}</View>;
@@ -59,6 +72,26 @@ export function LoadingIcon() {
   );
 }
 
+export function ListArea({children}) {
+  return <View style={styles.listArea}>{children}</View>;
+}
+export function BarberItem({data}) {
+  return (
+    <TouchableOpacity style={styles.barberItem}>
+      <View style={styles.area}>
+        <Image style={styles.avatar} source={{uri: data.avatar}} />
+        <View style={styles.infoArea}>
+          <Text style={styles.userName}>{data.name}</Text>
+          <Stars stars={data.stars} showNumber={true} />
+          <View style={styles.seeProfileButton}>
+            <Text style={styles.seeProfileButtonText}>Ver Perfil</Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -100,5 +133,41 @@ const styles = StyleSheet.create({
   locationFinder: {
     width: 24,
     height: 24,
+  },
+  listArea: {
+    marginVertical: 30,
+  },
+  area: {
+    backgroundColor: '#fff',
+    marginBottom: 20,
+    borderRadius: 20,
+    padding: 15,
+    flexDirection: 'row',
+  },
+  avatar: {
+    width: 88,
+    height: 88,
+    borderRadius: 20,
+  },
+  infoArea: {
+    marginLeft: 20,
+    justifyContent: 'space-between',
+  },
+  userName: {
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  seeProfileButton: {
+    width: 85,
+    height: 26,
+    borderWidth: 1,
+    borderColor: '#4eadbe',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  seeProfileButtonText: {
+    fontSize: 13,
+    color: '#268596',
   },
 });
