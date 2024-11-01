@@ -67,7 +67,7 @@ export function SwiperImage({source, resizeMode}) {
 }
 
 export function UserInfo({children}) {
-  return <View>{children}</View>;
+  return <View style={styles.userInfo}>{children}</View>;
 }
 
 export function UserAvatar({source}) {
@@ -75,11 +75,21 @@ export function UserAvatar({source}) {
 }
 
 export function UserInfoName({children}) {
-  return <Text>{children}</Text>;
+  return <Text style={styles.userInfoName}>{children}</Text>;
 }
 
 export function UserFavButton({children}) {
-  return <TouchableOpacity>{children}</TouchableOpacity>;
+  return (
+    <TouchableOpacity style={styles.userFavButton}>{children}</TouchableOpacity>
+  );
+}
+
+export function BackButton({children, onPress}) {
+  return (
+    <TouchableOpacity style={styles.backButton} onPress={onPress}>
+      {children}
+    </TouchableOpacity>
+  );
 }
 const styles = StyleSheet.create({
   container: {
@@ -116,5 +126,50 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     marginTop: -50,
     minHeight: 450,
+  },
+  userInfoArea: {
+    flexDirection: 'row',
+    marginTop: -30,
+  },
+  userAvatar: {
+    width: 110,
+    height: 110,
+    borderRadius: 20,
+    marginLeft: 30,
+    marginRight: 20,
+    borderWidth: 4,
+    borderBlockColor: '#FFF',
+  },
+  userInfoName: {
+    color: '#000',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  userFavButton: {
+    width: 40,
+    height: 40,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#99999999',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
+  userInfo: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    zIndex: 9,
+  },
+  fakeSwiper: {
+    height: 240,
+    backgroundColor: '#63c2d1',
   },
 });
