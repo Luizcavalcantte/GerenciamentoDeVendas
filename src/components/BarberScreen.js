@@ -91,6 +91,56 @@ export function BackButton({children, onPress}) {
     </TouchableOpacity>
   );
 }
+
+export function LoadingIcon(size, color) {
+  return (
+    <ActivityIndicator size={size} color={color} style={{marginTop: 50}} />
+  );
+}
+export function ServicesTitle({children}) {
+  return <Text style={styles.servicesTitle}>{children}</Text>;
+}
+export function ServiceItem({children}) {
+  return <View style={styles.serviceItem}>{children}</View>;
+}
+
+export function ServiceInfo({children}) {
+  return <View style={styles.serviceInfo}>{children}</View>;
+}
+export function ServiceName({children}) {
+  return <Text style={styles.serviceName}>{children}</Text>;
+}
+export function ServicePrice({children}) {
+  return <Text style={styles.servicePrice}>{children}</Text>;
+}
+
+export function ServiceChooseButton({children}) {
+  return (
+    <TouchableOpacity style={styles.serviceChooseButton}>
+      {children}
+    </TouchableOpacity>
+  );
+}
+
+export function ServiceChooseButtonText({children}) {
+  return <Text style={styles.serviceChooseButtonText}>{children}</Text>;
+}
+
+export function TestimonialItem({children}) {
+  return <View style={styles.testimonialItem}>{children}</View>;
+}
+export function TestimonialInfo({children}) {
+  return <View style={styles.testimonialInfo}>{children}</View>;
+}
+
+export function TestimonialName({children}) {
+  return <Text style={styles.testimonialName}>{children}</Text>;
+}
+
+export function TestimonialBody({children}) {
+  return <Text style={styles.testimonialBody}>{children}</Text>;
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -171,5 +221,67 @@ const styles = StyleSheet.create({
   fakeSwiper: {
     height: 240,
     backgroundColor: '#63c2d1',
+  },
+  serviceItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 30,
+    marginBottom: 20,
+  },
+  serviceName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#268593',
+  },
+  servicePrice: {
+    fontSize: 14,
+    color: '#268593',
+  },
+  serviceChooseButton: {
+    backgroundColor: '#4eadbe',
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+
+  serviceChooseButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  servicesTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#268596',
+    marginLeft: 30,
+    marginBottom: 20,
+  },
+  serviceArea: {
+    marginTop: 20,
+  },
+  testimonialArea: {
+    marginTop: 30,
+  },
+  testimonialItem: {
+    backgroundColor: '#268596',
+    padding: 15,
+    borderRadius: 10,
+    height: 110,
+    justifyContent: 'center',
+    marginHorizontal: 50,
+  },
+  testimonialInfo: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  testimonialName: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  testimonialBody: {
+    color: '#fff',
+    fontSize: 13,
   },
 });
