@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getBarber} from '../Api';
 import Swiper from 'react-native-swiper';
 import {Stars} from '../components/Stars';
+import BarberModal from '../components/BarberModal';
 import FavoriteIcon from '../assets/favorite.svg';
+import FavoriteFullIcon from '../assets/favorite_full.svg';
 import BackIcon from '../assets/back.svg';
 import NavPrevIcon from '../assets/nav_prev.svg';
 import NavNextIcon from '../assets/nav_next.svg';
@@ -44,6 +46,9 @@ export default function Barber() {
   const navigation = useNavigation();
   const route = useRoute();
   const [loading, setLoading] = useState(false);
+  const [favorited, setFavorited] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const [userInfo, setUserInfo] = useState({
     id: route.params.id,
@@ -56,10 +61,9 @@ export default function Barber() {
     async function getBarberInfo() {
       setLoading(true);
       let json = await getBarber(userInfo.id);
-      console.log(json);
 
       setUserInfo(json);
-      console.log(userInfo);
+      setFavorited(json.favorite);
 
       setLoading(false);
     }
@@ -70,6 +74,15 @@ export default function Barber() {
     navigation.goBack();
   }
 
+  function handleFavClick() {
+    setFavorited(!favorited);
+    //pesquisar como muda o estado desse objeto associado apenas ao usuario q cliqou no botao
+  }
+
+  function handleServiceChoose(key) {
+    setSelectedService(key);
+    setShowModal(true);
+  }
   return (
     <Container>
       <Scroller>
@@ -102,8 +115,12 @@ export default function Barber() {
               <UserInfoName>{userInfo.name}</UserInfoName>
               <Stars stars={userInfo.stars} showNumber={true} />
             </UserInfo>
-            <UserFavButton>
-              <FavoriteIcon width="24" height="24" fill="#ff0000" />
+            <UserFavButton onPress={handleFavClick}>
+              {favorited ? (
+                <FavoriteFullIcon width="24" height="24" fill="#ff0000" />
+              ) : (
+                <FavoriteIcon width="24" height="24" fill="#ff0000" />
+              )}
             </UserFavButton>
           </UserInfoArea>
           {loading && <LoadingIcon size="large " color="#000" />}
@@ -115,9 +132,9 @@ export default function Barber() {
                 <ServiceItem key={key}>
                   <ServiceInfo>
                     <ServiceName>{item.name}</ServiceName>
-                    <ServicePrice>R$ {item.price}</ServicePrice>
+                    <ServicePrice>R$ {item.price.toFixed(2)}</ServicePrice>
                   </ServiceInfo>
-                  <ServiceChooseButton>
+                  <ServiceChooseButton onPress={() => handleServiceChoose(key)}>
                     <ServiceChooseButtonText>Agendar</ServiceChooseButtonText>
                   </ServiceChooseButton>
                 </ServiceItem>
@@ -149,6 +166,12 @@ export default function Barber() {
       <BackButton onPress={handleBackButton}>
         <BackIcon width="44" height="44" fill="#fff" />
       </BackButton>
+      <BarberModal
+        show={showModal}
+        setShow={setShowModal}
+        user={userInfo}
+        service={selectedService}
+      />
     </Container>
   );
 }

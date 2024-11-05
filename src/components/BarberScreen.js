@@ -78,9 +78,11 @@ export function UserInfoName({children}) {
   return <Text style={styles.userInfoName}>{children}</Text>;
 }
 
-export function UserFavButton({children}) {
+export function UserFavButton({children, onPress}) {
   return (
-    <TouchableOpacity style={styles.userFavButton}>{children}</TouchableOpacity>
+    <TouchableOpacity style={styles.userFavButton} onPress={onPress}>
+      {children}
+    </TouchableOpacity>
   );
 }
 
@@ -114,9 +116,9 @@ export function ServicePrice({children}) {
   return <Text style={styles.servicePrice}>{children}</Text>;
 }
 
-export function ServiceChooseButton({children}) {
+export function ServiceChooseButton({children, onPress}) {
   return (
-    <TouchableOpacity style={styles.serviceChooseButton}>
+    <TouchableOpacity style={styles.serviceChooseButton} onPress={onPress}>
       {children}
     </TouchableOpacity>
   );
