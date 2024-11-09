@@ -40,6 +40,56 @@ export default function BarberModal({children, show, setShow, user, service}) {
   const [listHours, setListHours] = useState([]);
 
   useEffect(() => {
+    if (user.availability) {
+      let daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+      let newListDays = [];
+
+      for (let i = 1; i <= daysInMonth; i++) {
+        let d = new Date(selectedYear, selectedMonth, i);
+        let year = d.getFullYear();
+        let month = d.getMonth() + 1;
+        let day = d.getDate();
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+
+        let selDate = year + '-' + month + '-' + day;
+
+        let availability = user.availability.filter(e => e.date === selDate);
+
+        newListDays.push({
+          status: availability.length > 0 ? true : false,
+          weekDay: days[d.getDay()],
+          number: i,
+        });
+      }
+
+      setListDays(newListDays);
+      setSelectedDay(0);
+      setListHours([]);
+      setSelectedHour(0);
+    }
+  }, [user, selectedMonth, selectedYear]);
+
+  useEffect(() => {
+    if (user.availability && selectedDay > 0) {
+      let d = new Date(selectedYear, selectedMonth, selectedDay);
+      let year = d.getFullYear();
+      let month = d.getMonth() + 1;
+      let day = d.getDate();
+      month = month < 10 ? '0' + month : month;
+      day = day < 10 ? '0' + day : day;
+      let selDate = year + '-' + month + '-' + day;
+
+      let availability = user.availability.filter(e => e.date === selDate);
+
+      if (availability.length > 0) {
+        setListHours(availability[0].hours);
+      }
+    }
+    setSelectedHour(null);
+  }, [user, selectedDay]);
+
+  useEffect(() => {
     let today = new Date();
     setSelectedYear(today.getFullYear());
     setSelectedMonth(today.getMonth());
@@ -69,7 +119,21 @@ export default function BarberModal({children, show, setShow, user, service}) {
     }
   }
 
-  function handleFinishClick() {}
+  function handleFinishClick() {
+    if (
+      user.id &&
+      service != null &&
+      selectedYear > 0 &&
+      selectedDay > 0 &&
+      selectedHour != null
+    ) {
+      // mandar essas informaçoes pro sistema e registrar o agendamento, no meu caso, esperar o barbeiro confirmar o agendamento e mandar pro firebase
+      setShow(false);
+      navigation.navigate('Appointments');
+    } else {
+      Alert('algo esta errado, tente novamente mais tarde');
+    }
+  }
   return (
     <Modal
       style={styles.modal}
@@ -82,7 +146,6 @@ export default function BarberModal({children, show, setShow, user, service}) {
             style={styles.closeButton}
             onPress={() => {
               setShow(false);
-              console.log(service);
             }}>
             <ExpendIcon height={56} width={56} fill="#000" />
           </TouchableOpacity>
@@ -131,8 +194,77 @@ export default function BarberModal({children, show, setShow, user, service}) {
             <ScrollView
               style={styles.dateList}
               horizontal={true}
-              showsHorizontalScrollIndicator={false}></ScrollView>
+              showsHorizontalScrollIndicator={false}>
+              {listDays.map((item, key) => (
+                <TouchableOpacity
+                  style={[
+                    styles.dateItem,
+                    {
+                      opacity: item.status ? 1 : 0.5,
+                      backgroundColor:
+                        item.number === selectedDay ? '#4eadb3' : '#fff',
+                    },
+                  ]}
+                  key={key}
+                  onPress={() => {
+                    if (item.status) {
+                      setSelectedDay(item.number);
+                    } else {
+                      setSelectedDay(0);
+                      setListHours([]);
+                    }
+                  }}>
+                  <Text
+                    style={[
+                      styles.dateItemText,
+                      {color: item.number === selectedDay ? '#fff' : '#000'},
+                    ]}>
+                    {item.weekDay}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.dateItemText,
+                      {color: item.number === selectedDay ? '#fff' : '#000'},
+                    ]}>
+                    {item.number}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
+
+          {selectedDay > 0 && listHours.length > 0 && (
+            <View style={styles.modalItem}>
+              <ScrollView
+                style={styles.timeList}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {listHours.map((item, key) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.timeItem,
+                      {
+                        backgroundColor:
+                          item === selectedHour ? '#4eadb3' : '#fff',
+                      },
+                    ]}
+                    key={key}
+                    onPress={() => {
+                      setSelectedHour(item);
+                    }}>
+                    <Text
+                      style={[
+                        styles.dateItemText,
+                        {color: item === selectedHour ? '#fff' : '#000'},
+                      ]}>
+                      {item}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+
           <TouchableOpacity
             style={styles.finishButton}
             onPress={handleFinishClick}>
@@ -208,8 +340,6 @@ const styles = StyleSheet.create({
   },
   dateInfo: {
     flexDirection: 'row',
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   datePrevArea: {
     flex: 1,
@@ -229,5 +359,24 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
     color: '#000',
+  },
+  dateItem: {
+    width: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingVertical: 5,
+  },
+  dateItemText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  timeItem: {
+    width: 75,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
   },
 });

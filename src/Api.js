@@ -114,7 +114,6 @@ export async function logOut(navigation) {
 }
 
 export async function getBarber(id) {
-  console.log('Iniciada função getBarber');
   const docRef = doc(db, 'data', 'fRKGk5zCawMTccefdDon'); // Acesse o documento específico
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
@@ -130,5 +129,26 @@ export async function getBarber(id) {
   } else {
     console.log('Nenhum documento encontrado!');
     return null;
+  }
+}
+
+export async function search(barberName) {
+  const docRef = doc(db, 'data', 'fRKGk5zCawMTccefdDon'); // Acesse o documento específico
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    const barbers = data.barbers;
+    const filteredBarbers = barbers.filter(barber =>
+      barber.name.toLowerCase().includes(barberName.toLowerCase()),
+    );
+    if (filteredBarbers.length > 0) {
+      return filteredBarbers;
+    } else {
+      console.log('Barbeiro não encontrado!');
+      return [];
+    }
+  } else {
+    console.log('Nenhum documento encontrado!');
+    return [];
   }
 }
