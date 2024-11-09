@@ -152,3 +152,23 @@ export async function search(barberName) {
     return [];
   }
 }
+
+export async function getFavorites() {
+  const docRef = doc(db, 'data', 'fRKGk5zCawMTccefdDon'); // Acesse o documento específico
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    const barbers = data.barbers;
+    const filteredBarbers = barbers.filter(barber => barber.favorite == true);
+
+    if (filteredBarbers.length > 0) {
+      return filteredBarbers;
+    } else {
+      console.log('Barbeiro não encontrado!');
+      return [];
+    }
+  } else {
+    console.log('Nenhum documento encontrado!');
+    return [];
+  }
+}

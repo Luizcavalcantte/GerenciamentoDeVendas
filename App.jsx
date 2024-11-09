@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import MainStack from './src/sracks/MainStack';
 import UserContextProvider from './src/contexts/UserContext';
 
-//tela busca 2-2 8:30
+//tela atendimento 1
 export default function App() {
   return (
     <UserContextProvider>

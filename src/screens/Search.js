@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,23 +6,35 @@ import {
   SafeAreaView,
   ScrollView,
   ActivityIndicator,
+  Text,
 } from 'react-native';
 import {BarberItem} from '../components/ScreenTabComponents';
 import {search} from '../Api';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Search() {
+  const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
+  const [emptyList, setEmptyList] = useState(false);
+  useEffect(() => {
+    searchBarbers();
+  }, [searchText]);
 
   async function searchBarbers() {
+    setEmptyList(false);
     setLoading(true);
     setList([]);
     if (searchText != '') {
       let res = await search(searchText);
-      console.log(res);
+
       if (res) {
-        setList(res);
+        if (res.length > 0) {
+          setList(res);
+        } else {
+          setEmptyList(true);
+        }
       } else {
         alert(res.error);
         setList([]);
@@ -53,9 +65,14 @@ export default function Search() {
             style={{marginTop: 30}}
           />
         )}
+        {emptyList && (
+          <Text style={styles.emptyWarning}>
+            Não achamos barbeiros com o nome ' {searchText} '
+          </Text>
+        )}
         <View style={styles.listArea}>
           {list.map((item, key) => (
-            <BarberItem key={key} data={item} />
+            <BarberItem key={key} data={item} navigation={navigation} />
           ))}
         </View>
       </ScrollView>
@@ -86,5 +103,11 @@ const styles = StyleSheet.create({
   },
   listArea: {
     marginVertical: 20,
+  },
+  emptyWarning: {
+    textAlign: 'center',
+    marginTop: 30,
+    color: '#fff',
+    fontSize: 14,
   },
 });
