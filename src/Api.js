@@ -1,5 +1,5 @@
 import {initializeApp} from 'firebase/app';
-import {getFirestore, collection, doc, getDoc} from 'firebase/firestore';
+import {getFirestore, doc, getDoc} from 'firebase/firestore';
 
 import {
   initializeAuth,
@@ -35,7 +35,6 @@ auth.setPersistence(getReactNativePersistence(AsyncStorage));
 export async function checkAuthState(navigation) {
   onAuthStateChanged(auth, user => {
     if (user) {
-      console.log('Usuário logado:', user.displayName);
       navigation.reset({
         routes: [{name: 'MainTab'}],
       });
@@ -78,6 +77,7 @@ export async function signIn(navigation, emailField, passwordField) {
     const user = userCredential.user;
 
     alert('Login realizado com sucesso!');
+    console.log(user);
     navigation.reset({
       routes: [{name: 'MainTab'}],
     });
@@ -171,4 +171,51 @@ export async function getFavorites() {
     console.log('Nenhum documento encontrado!');
     return [];
   }
+}
+
+export async function getAppointments() {
+  const userId = await new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        resolve(user.uid);
+      } else {
+        reject('Usuário não autenticado');
+      }
+    });
+  });
+
+  const docRef = doc(db, 'data', 'fRKGk5zCawMTccefdDon');
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    const appointments = data.appointments;
+    const filteredAppointments = appointments.filter(
+      appointments => appointments.uid == userId,
+    );
+
+    if (filteredAppointments.length > 0) {
+      return filteredAppointments;
+    } else {
+      console.log('serviço não encontrado!');
+      return [];
+    }
+  } else {
+    console.log('Nenhum documento encontrado!');
+    return [];
+  }
+}
+
+export async function getUserInfo() {
+  const userInfo = await new Promise((resolve, reject) => {
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        resolve(user);
+        console.log('user' + user);
+      } else {
+        reject('Usuário não autenticado');
+      }
+    });
+  });
+
+  return userInfo;
 }
