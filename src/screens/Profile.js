@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {logOut, getUserInfo} from '../Api';
+import {logOut, getUserInfo, updateName} from '../Api';
 
 export default function Profile() {
   const [userInfo, setUserInfo] = useState(null);
-  const [userName, setUserName] = useState('');
+  const [changeName, setChangeName] = useState('nome');
+
   const [informalName, setInformalName] = useState('');
   const [phone, setPhone] = useState('');
 
@@ -24,7 +25,9 @@ export default function Profile() {
       try {
         const user = await getUserInfo();
         setUserInfo(user);
-        console.log('user ' + JSON.stringify(userInfo));
+        console.dir(userInfo, {depth: Infinity});
+
+        setChangeName(user.displayName);
       } catch {
         console.log('error');
       }
@@ -47,7 +50,9 @@ export default function Profile() {
             uri: 'https://cdn-icons-png.flaticon.com/512/9368/9368284.png',
           }}></Image>
         {userInfo?.email ? (
-          <Text style={styles.userName}>{userInfo.email}</Text>
+          <Text style={styles.userName}>
+            {changeName || userInfo.displayName}
+          </Text>
         ) : (
           <Text style={styles.userName}>Sem Nome de Usuario</Text>
         )}
@@ -60,10 +65,19 @@ export default function Profile() {
             placeholderTextColor={'#000'}
             returnKeyType="done"
             selectTextOnFocus={true}
-            value={userName}
-            onChangeText={t => setUserName(t)}
+            value={changeName}
+            onChangeText={t => setChangeName(t)}
           />
-          <TouchableOpacity style={styles.editingButton}>
+          <TouchableOpacity
+            style={styles.editingButton}
+            onPress={() => {
+              if (changeName.length > 1) {
+                updateName(changeName);
+                alert('Nome salvo com sucesso');
+              } else {
+                alert('seu nome precisa ter ao menos 2 caracteres');
+              }
+            }}>
             <Image
               style={styles.editingButtonImage}
               source={require('../assets/editingIcon.png')}

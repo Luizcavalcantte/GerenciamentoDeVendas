@@ -219,3 +219,14 @@ export async function getUserInfo() {
 
   return userInfo;
 }
+
+export async function updateName(newName) {
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      updateProfile(user, {
+        displayName: newName,
+      });
+    } else {
+    }
+  });
+}
