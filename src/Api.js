@@ -68,7 +68,6 @@ export async function signUp(navigation, name, emailField, passwordField) {
 
 export async function signIn(navigation, emailField, passwordField) {
   try {
-    alert('Login realizado com sucesso!');
     const userCredential = await signInWithEmailAndPassword(
       auth,
       emailField,
